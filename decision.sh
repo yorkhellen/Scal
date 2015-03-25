@@ -11,15 +11,15 @@ function main()
 {
 	if (( $1 )); then
 
-    local alias=awk '/Alias/ && /tcp/ {print $2} ' $1
+        local alias=awk '/Alias/ && /tcp/ {print $2} ' $1
 	local host=`hostname`
 	local i=0
 		for node in $alias
 		do 
 			
-			if (( $node""x == $host""x )); then
-			note[$i]  scp $node   datamigration.sh -n
-			count[$i] scp $node   datamigration.sh -c
+			if [[ "$node"x == "$host"x ]]; then
+			note[$i]  scp $node   /usr/local/Scal/datamigration.sh -n
+			count[$i] scp $node   /usr/local/Scal/datamigration.sh -s
 			$i=$[$i+1]
 			fi
 		done
