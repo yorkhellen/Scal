@@ -1,21 +1,36 @@
 #!/bin/bash
-dir=`pwd`
-recode=/tmp/dbasky/root
-files=/mnt/pvfs2
-config=/etc/pvfs2-fs.conf.new
+function nodeinfo ()
+{
+	dstat -rnl 20 45
+}
+function userinfo ()
+{
+local result_file=`pvfs2-ls /mnt/pvfs2`
+local result_recode=`ls /tmp/dbasky/root `
+local i=0
+	for eachfile in $result_files
+	do
+		sum=0;
+		for eachrecode in $result_recode
+		do
+			 sum=$[$sum+`awk -v RS='/mnt/pvfs2/$eachfile' 'END {print --NR}' /tmp/dbasky/root/""$eachrecode`]
+		done
+		array[$i]=$sum
+		i=$[$i+1]
+	done
+	echo $(array[*])
+exit 0
+}
 
-result_recode=`ls $recode`
-result_files=`pvfs2-ls $files`
-old_alias=`awk '/Alias/ && /tcp/ {print $2}' $config`
-echo $old_alias
-host=`hostname`
-for eachnode in $old_alias
-do
-   if (( $eachnode""x != $host""x)); then
-      scp $eachnode "/usr/local/Scal/datamigration.sh"
-   fi
-done
+function main ()
+{
+	if (( $1""x == "-n"x )); then
+         nodeinfo
+	fi
 
-
-
-
+	if (( $1""x == "-s"x )); then
+		 userinfo
+	fi
+	exit 0
+}
+main $1
