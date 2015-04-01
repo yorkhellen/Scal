@@ -17,9 +17,9 @@ function main()
 		for node in $alias
 		do 
 			
-			if [[ "$node"x == "$host"x ]]; then
+			if [[ "$node"x != "$host"x ]]; then
 			note[$i]  scp $node   /usr/local/Scal/datamigration.sh -n
-			count[$i] scp $node   /usr/local/Scal/datamigration.sh -s
+			count[$i] scp $node   /usr/local/Scal/datamigration.sh -u
 			$i=$[$i+1]
 			fi
 		done
@@ -36,14 +36,15 @@ function main()
 
 	   for eachcount in $count
 	   do  
-	    for (( node=0 ; node <= $x ; node++ ))
-		do
-				filecount[$x]=$[$(filecount[$x])+$eachcount[$node]]
-		done
-       done
-    exit 0
-	fi 
-	exit 0    
+		   for (( node=0 ; node <= $x ; node++ ))
+		   do
+			   filecount[$x]=$[$(filecount[$x])+$eachcount[$node]]
+		   done
+	   done		
+         local migration_file=`decision_alg $i $note $count $filesize $filename`
+         migration $migration_file 
+         fi 
+   exit 0    
 
 }
 function migration () 
@@ -61,4 +62,21 @@ function migration ()
 	done
   exit 0 
 }
+function decision_alg ()
+{
+  if (( $3 && $4 && $5 )); then
+  local filecount=$3
+  local filesize=$4
+  local filename=$5
+  local i=0
+
+  for eachfile in $filename
+  do
+    local factor[i]=[ ${$filecount[i]} + ${$filesize[i]} ]
+    i=$[$i+1]
+  done
+    
+  fi
+}
+
 main $1
