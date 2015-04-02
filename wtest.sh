@@ -1,7 +1,5 @@
 #!/bin/bash
-readcom=/usr/local/Scal/read
-writecom=/usr/local/Scal/write
-rreadcom=/usr/local/Scal/rread
+readcom=/usr/local/Scal/write
 command=
 function usage ()
 {
@@ -63,7 +61,7 @@ do
  
 done
 d=`date "+%Y-%m-%d+%H:%M:%S" `
-echo "#!/bin/bash" >./run/$d""_""$numofread"".sh
+echo "#!/bin/bash" >./run/$d""_"$numofread"".sh
 echo $command >>./run/$d""_""$numofread"".sh
 chmod a+x  ./run/$d""_""$numofread"".sh
 ./run/$d""_""$numofread"".sh  >  ./result/$d""_""$numofread
