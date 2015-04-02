@@ -14,12 +14,13 @@ opts:
 	-h    show this menu '
  exit 0
 }
-while getopts :r:w:d:h opt
+while getopts :r:w:d:hc: opt
 do
   case "$opt" in
   r) numofread=$OPTARG    ;;
   w) numofwrite=$OPTARG   ;;
   d) numofrread=$OPTARG   ;;
+  c) etc=$OPTARG          ;;
   h) usage   
      exit 0    ;;
   *) usage 
@@ -28,45 +29,43 @@ do
 done
 
 
-nodes=`awk '/Alias/ && /tcp/ {print $2}' /etc/pvfs2-fs.conf.new`
-echo $nodes
+nodes=`awk '/Alias/ && /tcp/ {print $2}' $etc`
 
 i=0
+
 for iter in $nodes
 do
    i=$[$i+1]
 done
 
-parall=$[$[$numofread/$i]]
+
+parall=$[$numofread / $i]
+
+flag=0
+
 for eachnode in $nodes
 do
-  command=$command""" & ssh $eachnode "
+
+  if [[ 0 -ne $flag ]]; then
+  command=$command""" & "
+  fi
+
+  flag=1
+  command=$command""" ssh $eachnode "
+
   command=$command""" \"  $readcom /mnt/pvfs2/test""$[$RANDOM % 30]"
-  for (( c = 1 ; c <= $parall ; c++  ))
+
+  for (( c = 1 ; c <= $[$parall-2] ; c++  ))
    do
     command=$command""" & $readcom /mnt/pvfs2/test""$[$RANDOM% 30] "
    done
-  command=$command""" & $readcom /mnt/pvfs2/test""$[$RANDOM% 30] \" " 
+  command=$command""" & $readcom /mnt/pvfs2/test""$[$RANDOM% 30] \" "
+ 
 done
 
-echo $command
-#parall=$[$totalnum/$i+1]
-#for eachnode in $nodes
-#do
-#  command=$command""" & ssh $eachnode "
-##  for (( c=1; c<=$parall ; c++ ))
-#   do
-#    command=$command""" & $readcom /mnt/pvfs2/test""rand"
-#   done 
-#done
-#parall=$[$totalnum/$i+1]
-##for eachnode in $nodes
-#do
-#  command=$command""" & ssh $eachnode "
-#  for (( c=1; c<=$parall ; c++ ))
-#   do
-#    command=$command""" & $readcom /mnt/pvfs2/test""rand"
-#   done 
-#done
-
+echo "#!/bin/bash" >tmp.sh
+echo $command >>tmp.sh
+chmod a+x tmp.sh
+./tmp.sh
+rm -rf ./tmp.sh
 
