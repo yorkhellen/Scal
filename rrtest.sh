@@ -1,5 +1,5 @@
 #!/bin/bash
-readcom=/usr/local/Scal/write
+readcom=`echo "/usr/local/Scal/rread -b 1048576" `
 command=
 function usage ()
 {
@@ -49,26 +49,21 @@ do
   fi
 
   flag=1
-   i=$[$RANDOM %30]
   command=$command""" ssh $eachnode "
-  
-  command=$command""" \"  $readcom /mnt/pvfs2/test""$i /mnt/pvfs2/test""$i"
+
+  command=$command""" \"  $readcom /mnt/pvfs2/test""$[$RANDOM % 30]"
 
   for (( c = 1 ; c <= $[$parall-2] ; c++  ))
- 
- 
    do
-   i=$[$RANDOM %30]
-      command=$command""" & $readcom /mnt/pvfs2/test""$i  /mnt/pvfs2/test""$i "
+    command=$command""" & $readcom /mnt/pvfs2/test""$[$RANDOM% 30] "
    done
-  i=$[$RANDOM %30]
-  command=$command""" & $readcom /mnt/pvfs2/test""$i /mnt/pvfs2/test""$i \" "
+  command=$command""" & $readcom /mnt/pvfs2/test""$[$RANDOM% 30] \" "
  
 done
 d=`date "+%Y-%m-%d+%H:%M:%S" `
-echo "#!/bin/bash" >./run/$d""_write""$numofread"".sh
-echo $command >>./run/$d""_write""$numofread"".sh
-chmod a+x  ./run/$d""_write""$numofread"".sh
-./run/$d""_write""$numofread"".sh  >  ./result/$d""_write""$numofread
-rm -rf ./run/$d""_write""$numofread"".sh
+echo "#!/bin/bash" >./run/$d""_rread""$numofread"".sh
+echo $command >>./run/$d""_rread""$numofread"".sh
+chmod a+x  ./run/$d""_rread""$numofread"".sh
+./run/$d""_rread""$numofread"".sh  >  ./result/$d""_rread""$numofread
+rm -rf ./run/$d""_rread""$numofread"".sh
 

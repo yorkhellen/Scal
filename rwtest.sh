@@ -1,7 +1,7 @@
 #!/bin/bash
-readcom=/usr/local/Scal/test/read
-writecom=/usr/local/Scal/test/write
-rreadcom=/usr/local/Scal/test/rread
+readcom=/usr/local/Scal/read
+writecom=/usr/local/Scal/write
+rreadcom=/usr/local/Scal/rread
 command=
 function usage ()
 {

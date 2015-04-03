@@ -1,6 +1,9 @@
 #!/bin/bash
-for (( i = 0 ; i < 360 ; i++ ))
+for (( i =1 ; i <900  ; i++ ))
 do
- setsid ./rwtest.sh  -r 30 -c /etc/pvfs2-fs.conf.new
- sleep 1
+ setsid   ./rrtest.sh  -r 60 -c /etc/pvfs2-fs.conf 
+ setsid   ./rwtest.sh  -r 10  -c /etc/pvfs2-fs.conf 
+ sleep 2
 done
+
+
