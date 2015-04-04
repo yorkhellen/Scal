@@ -51,13 +51,13 @@ do
   flag=1
   command=$command""" ssh $eachnode "
 
-  command=$command""" \"  $readcom /mnt/pvfs2/test""$[$RANDOM % 30]"
+  command=$command""" \"  $readcom /mnt/pvfs2/test15"
 
   for (( c = 1 ; c <= $[$parall-2] ; c++  ))
    do
-    command=$command""" & $readcom /mnt/pvfs2/test""$[$RANDOM% 30] "
+    command=$command""" & $readcom /mnt/pvfs2/test15 "
    done
-  command=$command""" & $readcom /mnt/pvfs2/test""$[$RANDOM% 30] \" "
+  command=$command""" & $readcom /mnt/pvfs2/test15 \" "
  
 done
 d=`date "+%Y-%m-%d+%H:%M:%S" `

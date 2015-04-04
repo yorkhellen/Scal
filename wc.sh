@@ -15,3 +15,15 @@ do
   echo " $i   $total"
   echo 
 done
+:<<tip
+ result =`ls /usr/local/Scal/result`
+ for file in $result
+ do 
+   echo $file
+   times=`awk '{print $5}' /usr/local/Scal/result/""$file`
+   size=`echo $times |wc -l`
+   max=`echo $times |sort -g -r`
+   speed=$( echo $size*1126 /${max[0]}| bc)
+   echo $i   $speed
+ done
+tip
